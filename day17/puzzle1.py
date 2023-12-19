@@ -40,15 +40,39 @@ def vput(key):
 def vget(key):
     return V[key]
 
+def d_get_all(coordinates):
+    ret = []
+    for DIR in [UP, DOWN, LEFT, RIGHT]:
+        for i in range(3):
+            dd = dget(get_key(coordinates, DIR, i))
+            if dd != float('inf'):
+                ret.append(dd)
+    return ret
+
+def v_get_all(coordinates):
+    ret = []
+    for DIR in [UP, DOWN, LEFT, RIGHT]:
+        for i in range(3):
+            dd = vget(get_key(coordinates, DIR, i))
+            if dd != False:
+                ret.append(dd)
+    return ret
+
 # set the starting vertex
 s = get_key((0, 0), RIGHT, 0)
+sp = get_key((0, 0), DOWN, 0)
 dput(s, 0)
 
-q = [s]
+q = [(0,) + s, (0,) + sp]
 
 while q:
     u = hq.heappop(q)
+    x, *xxxx = u
+    u = tuple(xxxx)
     u_cords, u_direct, u_blinl = key_to_val(u)
+
+    if vget(u):
+        continue
 
     # for every neighbor of u
     for v in [((u_cords[0] + DIRECTION_TO_CORDS_SHIFT[DIR][0], u_cords[1] + DIRECTION_TO_CORDS_SHIFT[DIR][1]), DIR, 1 if DIR != u_direct else u_blinl + 1) for DIR in [UP, DOWN, LEFT, RIGHT]]:
@@ -62,6 +86,9 @@ while q:
             if dget(v) > dget(u) + int(input[v_cords[0]][v_cords[1]]):
                 dput(v, dget(u) + int(input[v_cords[0]][v_cords[1]]))
             
-            hq.heappush(q, v)
+            if ((dget(v),) + v) not in q:
+                hq.heappush(q, (dget(v),) + v)
 
     vput(u)
+
+print(d_get_all((len(input)-1, len(input[0])-1)))

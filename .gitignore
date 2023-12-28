@@ -1,4 +1,4 @@
 */input*.*
 */*.png
 .vscode
-day24/.venv
+*/.venv

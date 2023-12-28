@@ -58,7 +58,6 @@ def transpose(mm):
 def solve(mm):
     tmm = transpose(mm)
     s1, s2, s3, s4 = solve_horizontal(mm), solve_horizontal(mm, reverse=False), solve_horizontal(tmm), solve_horizontal(tmm, reverse=False)
-    print(s1, s2, s3, s4)
     return 100*(s1 + s2 if s1 != s2 else s2) + (s3 + s4 if s3 != s4 else s3)
     
 
